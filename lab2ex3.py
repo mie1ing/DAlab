@@ -34,4 +34,4 @@ ax3.pie(sizes, labels=labels, autopct='%1.1f%%')
 ax3.set_title('Seasonal Share of Sunny Days')
 
 fig.suptitle('Sunny Days Analysis 1990-1999')
-plt.savefig('lab2ex3.png')
+plt.savefig('overleaf/67fe68e723632af9fad1411b/figures/lab2ex3.png')

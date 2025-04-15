@@ -20,7 +20,7 @@ plt.colorbar()
 plt.xlabel('x')
 plt.ylabel('t')
 plt.title('Korteveg de Vries on a Periodic Domain')
-plt.savefig('lab1ex2.png')
+plt.savefig('overleaf/67fe68e723632af9fad1411b/figures/lab1ex2.png')
 plt.close()
 
 crests_start = argrelmax(sol[0,:])

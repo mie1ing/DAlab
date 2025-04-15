@@ -53,4 +53,4 @@ plt.hlines(np.log(1.5), xmin=0, xmax=n, linestyles='--', color='red', label='Log
 plt.xlabel('n')
 plt.ylabel('s(n)')
 plt.legend()
-plt.savefig('lab2ex1.png')
+plt.savefig('overleaf/67fe68e723632af9fad1411b/figures/lab2ex1.png')
