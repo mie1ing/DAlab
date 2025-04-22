@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 x = np.arange(-180, 180, 1)
 y = np.arange(-90, 90, 1)
 X, Y = np.meshgrid(x, y)
-u = -10*np.sin(2*np.pi*Y/180)*np.cos(2*np.pi*X/180)**2
+u = -10*np.sin(2*np.pi*Y/180)*np.cos(np.pi*X/180)**2
 v = 10*np.cos(np.pi*Y/180)**2*np.sin(2*np.pi*X/180)
 ws = np.sqrt(u**2 + v**2)
 
