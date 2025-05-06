@@ -1,26 +1,18 @@
-import numpy as np
-import matplotlib.pyplot as plt
+import math
 
-x = np.arange(-180, 181, 1)
-y = np.arange(-90, 91, 1)
-X, Y = np.meshgrid(x, y)
-u = -10*np.sin(2*np.pi*Y/180)*np.cos(np.pi*X/180)**2
-v = 10*np.cos(np.pi*Y/180)**2*np.sin(2*np.pi*X/180)
-ws = np.sqrt(u**2 + v**2)
+def is_prime(n):
+    if n < 2:
+        return False
+    # check if n is divisible by any number in range 2...√(n) (rounded up)
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
 
-zonally_ave = np.average(ws, 1)
-plt.pcolormesh(X, Y, u)
-plt.colorbar()
-plt.title('u')
-plt.show()
-plt.close()
-plt.pcolormesh(X, Y, v)
-plt.colorbar()
-plt.title('v')
-plt.show()
-plt.close()
-plt.pcolormesh(X, Y, ws)
-plt.colorbar()
-plt.title('ws')
-plt.show()
-plt.close()
+def test_is_prime():
+    assert is_prime(1) == False
+    assert is_prime(2) == True
+    assert is_prime(3) == True
+    assert is_prime(4) == False
+
+test_is_prime()
