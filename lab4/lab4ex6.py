@@ -1,3 +1,5 @@
+# This script uses lab2ex2.py to calculate the wind energy spectra.
+
 import numpy as np
 import xarray as xr
 from lab12.lab2ex2 import lab2_wind_speed as lab2_ws
