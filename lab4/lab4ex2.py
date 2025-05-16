@@ -20,7 +20,7 @@ def wind_velocity_quiver_plot(u_velocity, v_velocity, subset_step, axis):
                   transform=ccrs.PlateCarree()
                   )
 
-    Qkey = axis.quiverkey(qv, 0.8, 0.9,
+    Qkey = axis.quiverkey(qv, 0.9, 0.95,
                       20,
                       '20 m/s',
                       labelpos='E',
@@ -30,7 +30,7 @@ def wind_velocity_quiver_plot(u_velocity, v_velocity, subset_step, axis):
 
 
 def generate_plot_layout():
-    figure = plt.figure(figsize=(12, 6))
+    figure = plt.figure(figsize=(12, 8))
     axis = plt.axes(projection=ccrs.PlateCarree())
     axis.coastlines()
 
