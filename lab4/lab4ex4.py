@@ -27,9 +27,9 @@ def globaly_average_plot(dataset, varname='varname'):
 
     plt.tight_layout()
     plt.savefig(f'/Users/bigmizhou/PycharmProjects/DAlab/overleaf/67fe68e723632af9fad1411b/figures/lab4ex4_2_{varname}.png')
-    plt.show()
+    plt.close()
 
-def zonally_average_plot(dataset, varname='varname', color='Blues'):
+def zonally_average_contourf_plot(dataset, varname='varname', color='Blues'):
     variable = dataset[varname].mean(dim='longitude')
     cs = variable.plot.contourf(x='time', y='latitude', cmap=color, add_colorbar=False)
 
@@ -40,7 +40,7 @@ def zonally_average_plot(dataset, varname='varname', color='Blues'):
     plt.xlabel('year')
 
     plt.savefig(f'/Users/bigmizhou/PycharmProjects/DAlab/overleaf/67fe68e723632af9fad1411b/figures/lab4ex4_3_{varname}.png')
-    plt.show()
+    plt.close()
 
 
 if __name__ == "__main__":
@@ -50,5 +50,5 @@ if __name__ == "__main__":
 
     globaly_average_plot(ds, 'lsp')
     globaly_average_plot(ds, 't2m')
-    zonally_average_plot(ds, 'lsp')
-    zonally_average_plot(ds, 't2m', color='coolwarm')
+    zonally_average_contourf_plot(ds, 'lsp')
+    zonally_average_contourf_plot(ds, 't2m', color='coolwarm')
