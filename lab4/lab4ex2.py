@@ -40,70 +40,65 @@ def generate_plot_layout():
     return figure, axis
 
 
+def generate_storm_dataset(dataset):
+    u = dataset['u'].sel(level=1000)
+    v = dataset['v'].sel(level=1000)
+
+    sws = calculate_wind_speed(u, v)
+    storm_mask = sws > 20
+
+    u_velocity_storm = u.where(storm_mask, drop=True)
+    v_velocity_storm = v.where(storm_mask, drop=True)
+    wind_speed_storm = sws.where(storm_mask, drop=True)
+
+    dataset_for_strom = xr.Dataset({'u': u_velocity_storm,
+                                'v': v_velocity_storm,
+                                'ws': wind_speed_storm
+                                    }).stack(points=("time", "latitude", "longitude"
+                                                 )).dropna(dim="points")
+    return dataset_for_strom
+
+
 if __name__ == '__main__':
     ds = xr.open_dataset('May2000-uvt.nc')
-    u = ds.u.sel(level=1000)
-    v = ds.v.sel(level=1000)
 
-    sur_wind_speed = calculate_wind_speed(u, v)
-    storm_mask = (sur_wind_speed > 20)
+    strom_dataset = generate_storm_dataset(ds)
 
-    ds_storm = ds.where(storm_mask & (ds.level == 1000))
+    lons = strom_dataset['longitude'].values
+    lats = strom_dataset['latitude'].values
+    u_storm = strom_dataset['u'].values
+    v_storm = strom_dataset['v'].values
+    ws = strom_dataset['ws'].values
 
-    storm_count = np.sum(storm_mask.values, axis=(1, 2))
+    _, ax = generate_plot_layout()
+    cs = ax.scatter(lons, lats, c=ws, s=10, cmap='viridis')
 
-    dates = ds_storm.time.values
+    # ax.quiver(lons, lats, u_storm, v_storm, color='red', scale=500, width=0.0025)
 
-    readable_dates = [np.datetime_as_string(date, unit='D') for date in dates]
-
-    plt.figure(figsize=(12, 6))
-    plt.plot(readable_dates, storm_count, marker='o', linestyle='-', color='blue', linewidth=2)
-    plt.grid(True, linestyle='--', alpha=0.7)
-    plt.title('Number of Storm Locations as Function of Time', fontsize=16)
-    plt.xlabel('dates', fontsize=14)
-    plt.ylabel('Number of Storm Locations', fontsize=14)
-    plt.xticks(rotation=45)
+    cbar = plt.colorbar(cs, ax=ax, orientation='horizontal')
+    cbar.set_label('Wind Speed (m/s)')
+    plt.title('Storm Locations', fontsize=16)
     plt.tight_layout()
-
-    plt.savefig('storm_plots/daily_storm_count.png', bbox_inches='tight')
+    plt.show()
     plt.close()
-
-    for day in dates:
-        day_wind_speed = calculate_wind_speed(u.sel(time=day),
-                                          v.sel(time=day)
-                                          )
-
-        day_storm_mask = storm_mask.sel(time=day)
-
-        if not day_storm_mask.any():
-            continue
-
-        _, ax = generate_plot_layout()
-
-        cs_bg = day_wind_speed.plot.contourf(ax=ax, transform=ccrs.PlateCarree(),
-                                         cmap='Blues',
-                                         add_colorbar=False
-                                        )
-
-        cs = day_wind_speed.where(day_storm_mask).plot.contour(ax=ax, colors='red',
-                                                      transform=ccrs.PlateCarree(),
-                                                      add_colorbar=False
-                                                      )
-
-        step = 3
-
-        u_storm = u.sel(time=day).where(day_storm_mask)
-        v_storm = v.sel(time=day).where(day_storm_mask)
-
-        Q, qk = wind_velocity_quiver_plot(u_storm, v_storm, step, ax)
-
-        cbar = plt.colorbar(cs_bg, ax=ax, orientation='horizontal')
-        cbar.set_label('Wind Speed (m/s)')
-
-        day_str = np.datetime_as_string(day, unit='D')
-        plt.title(f'Storm {day_str}', pad=20)
-
-        plt.tight_layout()
-
-        plt.savefig(f'storm_plots/lab4ex2_{day_str}.png', bbox_inches='tight')
-        plt.close()
+    #
+    # ds_storm = ds.where(storm_mask & (ds.level == 1000))
+    #
+    # storm_count = np.sum(storm_mask.values, axis=(1, 2))
+    #
+    # dates = ds_storm.time.values
+    #
+    # readable_dates = [np.datetime_as_string(date, unit='D') for date in dates]
+    #
+    # plt.figure(figsize=(12, 6))
+    # plt.plot(readable_dates, storm_count, marker='o', linestyle='-', color='blue', linewidth=2)
+    # plt.grid(True, linestyle='--', alpha=0.7)
+    # plt.title('Number of Storm Locations as Function of Time', fontsize=16)
+    # plt.xlabel('dates', fontsize=14)
+    # plt.ylabel('Number of Storm Locations', fontsize=14)
+    # plt.xticks(rotation=45)
+    # plt.tight_layout()
+    #
+    # plt.savefig('storm_plots/daily_storm_count.png', bbox_inches='tight')
+    # plt.close()
+    #
