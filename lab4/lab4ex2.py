@@ -3,32 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 
-def calculate_wind_speed(u_velocity, v_velocity):
-    return np.sqrt(u_velocity ** 2 + v_velocity ** 2)
-
-
-def wind_velocity_quiver_plot(u_velocity, v_velocity, subset_step, axis):
-    longitude_subset = u_velocity.longitude.values[::subset_step]
-    latitude_subset = v_velocity.latitude.values[::subset_step]
-
-    qv = axis.quiver(longitude_subset, latitude_subset,
-                  u_velocity.sel(longitude=longitude_subset, latitude=latitude_subset).values,
-                  v_velocity.sel(longitude=longitude_subset, latitude=latitude_subset).values,
-                  scale=500,
-                  color='red',
-                  width=0.0025,
-                  transform=ccrs.PlateCarree()
-                  )
-
-    Qkey = axis.quiverkey(qv, 0.9, 0.95,
-                      20,
-                      '20 m/s',
-                      labelpos='E',
-                      coordinates='figure'
-                      )
-    return qv, Qkey
-
-
 def generate_plot_layout():
     figure = plt.figure(figsize=(12, 8))
     axis = plt.axes(projection=ccrs.PlateCarree())
@@ -40,11 +14,11 @@ def generate_plot_layout():
     return figure, axis
 
 
-def generate_storm_dataset(dataset):
+def generate_storm_dataset_and_mask(dataset):
     u = dataset['u'].sel(level=1000)
     v = dataset['v'].sel(level=1000)
 
-    sws = calculate_wind_speed(u, v)
+    sws = np.sqrt(u ** 2 + v ** 2)
     storm_mask = sws > 20
 
     u_velocity_storm = u.where(storm_mask, drop=True)
@@ -56,13 +30,13 @@ def generate_storm_dataset(dataset):
                                 'ws': wind_speed_storm
                                     }).stack(points=("time", "latitude", "longitude"
                                                  )).dropna(dim="points")
-    return dataset_for_strom
+    return dataset_for_strom, storm_mask
 
 
 if __name__ == '__main__':
     ds = xr.open_dataset('May2000-uvt.nc')
 
-    strom_dataset = generate_storm_dataset(ds)
+    strom_dataset, mask = generate_storm_dataset_and_mask(ds)
 
     lons = strom_dataset['longitude'].values
     lats = strom_dataset['latitude'].values
@@ -73,32 +47,28 @@ if __name__ == '__main__':
     _, ax = generate_plot_layout()
     cs = ax.scatter(lons, lats, c=ws, s=10, cmap='viridis')
 
-    # ax.quiver(lons, lats, u_storm, v_storm, color='red', scale=500, width=0.0025)
+    # Wind vector
+    # qv = ax.quiver(lons, lats, u_storm, v_storm, color='red', scale=500, width=0.0025)
+    # ax.quiverkey(qv, 0.9, 0.95, 20, '20 m/s', labelpos='E', coordinates='figure')
 
     cbar = plt.colorbar(cs, ax=ax, orientation='horizontal')
     cbar.set_label('Wind Speed (m/s)')
     plt.title('Storm Locations', fontsize=16)
+
     plt.tight_layout()
-    plt.show()
+
+    plt.savefig('/Users/bigmizhou/PycharmProjects/DAlab/overleaf/67fe68e723632af9fad1411b/figures/lab4ex2_1_quiver.png')
     plt.close()
-    #
-    # ds_storm = ds.where(storm_mask & (ds.level == 1000))
-    #
-    # storm_count = np.sum(storm_mask.values, axis=(1, 2))
-    #
-    # dates = ds_storm.time.values
-    #
-    # readable_dates = [np.datetime_as_string(date, unit='D') for date in dates]
-    #
-    # plt.figure(figsize=(12, 6))
-    # plt.plot(readable_dates, storm_count, marker='o', linestyle='-', color='blue', linewidth=2)
-    # plt.grid(True, linestyle='--', alpha=0.7)
-    # plt.title('Number of Storm Locations as Function of Time', fontsize=16)
-    # plt.xlabel('dates', fontsize=14)
-    # plt.ylabel('Number of Storm Locations', fontsize=14)
-    # plt.xticks(rotation=45)
-    # plt.tight_layout()
-    #
-    # plt.savefig('storm_plots/daily_storm_count.png', bbox_inches='tight')
-    # plt.close()
-    #
+
+
+    mask.sum(dim=['latitude', 'longitude']).plot(marker='o', linestyle='-', color='blue', linewidth=2)
+
+    plt.xlabel('dates', fontsize=14)
+    plt.ylabel('Number of Storm Locations', fontsize=14)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.title('Number of Storm Locations as Function of Time', fontsize=16)
+
+    plt.tight_layout()
+
+    plt.savefig('/Users/bigmizhou/PycharmProjects/DAlab/overleaf/67fe68e723632af9fad1411b/figures/lab4ex2_2.png')
+    plt.close()

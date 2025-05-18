@@ -4,8 +4,28 @@ import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
-from lab4ex2 import wind_velocity_quiver_plot as wvqp
 from lab4ex2 import generate_plot_layout as gpl
+
+def wind_velocity_quiver_plot(u_velocity, v_velocity, subset_step, axis):
+    longitude_subset = u_velocity.longitude.values[::subset_step]
+    latitude_subset = v_velocity.latitude.values[::subset_step]
+
+    qv = axis.quiver(longitude_subset, latitude_subset,
+                  u_velocity.sel(longitude=longitude_subset, latitude=latitude_subset).values,
+                  v_velocity.sel(longitude=longitude_subset, latitude=latitude_subset).values,
+                  scale=500,
+                  color='red',
+                  width=0.0025,
+                  transform=ccrs.PlateCarree()
+                  )
+
+    Qkey = axis.quiverkey(qv, 0.9, 0.95,
+                      20,
+                      '20 m/s',
+                      labelpos='E',
+                      coordinates='figure'
+                      )
+    return qv, Qkey
 
 
 def ave_wind_speed_profile_and_velocity(u_speed, v_speed):
@@ -24,7 +44,7 @@ def plot_wind_speed_and_velocity(wind_speed_profile, u_speed, v_speed, step, fil
                                          add_colorbar=False
                                      )
 
-    Q, qk = wvqp(u_speed, v_speed, step, ax)
+    Q, qk = wind_velocity_quiver_plot(u_speed, v_speed, step, ax)
 
     cbar = plt.colorbar(cs_bg, ax=ax, orientation='horizontal')
     cbar.set_label('Wind Speed (m/s)')

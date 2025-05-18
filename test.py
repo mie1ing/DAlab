@@ -1,40 +1,29 @@
-# import xarray as xr
-# import matplotlib.pyplot as plt
-# import cartopy.crs as ccrs
-#
-# ds = xr.open_dataset('lab4/2000monthly-surft-prec.nc')
-#
-# season_dict = {1: 'DJF', 2: 'DJF', 3: 'MAM', 4: 'MAM', 5: 'MAM',
-#                6: 'JJA', 7: 'JJA', 8: 'JJA', 9: 'SON', 10: 'SON',
-#                11: 'SON', 12: 'DJF'}
-# ds = ds.assign_coords(season=("time", [season_dict[t.dt.month.item()] for t in ds.time]))
-#
-# seasonal_means = ds.groupby("season").mean(dim='time')
+import xarray as xr
+import numpy as np
+import matplotlib.pyplot as plt
+# from lab4.lab4ex2 import generate_storm_dataset
 
+ds = xr.open_dataset('lab4/May2000-uvt.nc')
 
-# zonally_average_lsp = seasonal_means['lsp'].mean(dim='longitude')
+# sds = generate_storm_dataset(ds)
 #
-# seasons = ['DJF', 'MAM', 'JJA', 'SON']
+# storm_counts = sds.groupby('time').count()
 #
-# for season in seasons:
-#     plt.plot(zonally_average_lsp.latitude,
-#              zonally_average_lsp.sel(season=season),
-#              linestyle='-', linewidth=1, label=season)
+# storm_counts['u'].plot()
 #
-# plt.title('Seasonal zonally average large-scale precipitation')
-# plt.xlabel('latitude')
-# plt.ylabel('zonally average lsp')
-#
-# plt.legend()
-# plt.show()
-
-
-# varibility = ds.groupby('season').max(dim='time') - ds.groupby('season').min(dim='time')
-#
-# g = varibility['lsp'].plot.contourf(x='longitude', y='latitude',
-#                                 col='season', col_wrap=2, cmap='Blues',
-#                                 subplot_kws={'projection': ccrs.PlateCarree()})
-# g.map(lambda: plt.gca().coastlines(linewidth=0.25))
-#
+# plt.ylabel('storm count')
 # plt.show()
 # plt.close()
+
+u = ds['u'].sel(level=1000)
+v = ds['v'].sel(level=1000)
+ws = np.sqrt(u ** 2 + v ** 2)
+storm_mask = ws > 20
+
+storm_count = storm_mask.sum(dim=['latitude', 'longitude'])
+print(storm_count)
+
+storm_count.plot()
+plt.ylabel('storm count')
+plt.show()
+plt.close()
