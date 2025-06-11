@@ -34,7 +34,7 @@ def generate_storm_dataset_and_mask(dataset):
 
 
 if __name__ == '__main__':
-    ds = xr.open_dataset('May2000-uvt.nc')
+    ds = xr.open_dataset('../data/May2000-uvt.nc')
 
     strom_dataset, mask = generate_storm_dataset_and_mask(ds)
 

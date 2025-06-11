@@ -2,7 +2,7 @@
 
 import numpy as np
 import xarray as xr
-from lab12.lab2ex2 import lab2_wind_speed as lab2_ws
+from lab1_2.lab2ex2 import lab2_wind_speed as lab2_ws
 
 ws, u, v, x, y = lab2_ws()
 energy = 0.5 * (u**2 + v**2)

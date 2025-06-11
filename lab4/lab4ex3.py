@@ -58,14 +58,14 @@ def plot_wind_speed_and_velocity(wind_speed_profile, u_speed, v_speed, step, fil
 
 if __name__ == '__main__':
     # surface wind speed data
-    ds = xr.open_dataset('may2000-surf.nc')
+    ds = xr.open_dataset('../data/may2000-surf.nc')
     u10 = ds.u10
     v10 = ds.v10
     ds.close()
     ave_sur_wind_speed, u10_ave, v10_ave = ave_wind_speed_profile_and_velocity(u10, v10)
 
     # top of tropopause wind speed data
-    ds = xr.open_dataset('May2000-uvt.nc')
+    ds = xr.open_dataset('../data/May2000-uvt.nc')
     u = ds.u.sel(level=200, method='nearest')
     v = ds.v.sel(level=200, method='nearest')
     ds.close()

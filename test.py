@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 # from lab4.lab4ex2 import generate_storm_dataset
 
-ds = xr.open_dataset('lab4/May2000-uvt.nc')
+ds = xr.open_dataset('data/May2000-uvt.nc')
 
 # sds = generate_storm_dataset(ds)
 #
