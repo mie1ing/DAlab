@@ -4,7 +4,7 @@ import xarray as xr
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
-from lab4ex2 import generate_plot_layout as gpl
+from lab4.lab4ex2 import generate_plot_layout as gpl
 
 def wind_velocity_quiver_plot(u_velocity, v_velocity, subset_step, axis):
     longitude_subset = u_velocity.longitude.values[::subset_step]
@@ -19,7 +19,7 @@ def wind_velocity_quiver_plot(u_velocity, v_velocity, subset_step, axis):
                   transform=ccrs.PlateCarree()
                   )
 
-    Qkey = axis.quiverkey(qv, 0.9, 0.95,
+    Qkey = axis.quiverkey(qv, 0.9, 0.98,
                       20,
                       '20 m/s',
                       labelpos='E',
