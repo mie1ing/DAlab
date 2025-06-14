@@ -1,6 +1,5 @@
 import xarray as xr
 import cartopy.crs as ccrs
-# import seaborn as sns
 import matplotlib.pyplot as plt
 from lab4.lab4ex2 import generate_plot_layout as gpl
 from lab4.lab4ex3 import wind_velocity_quiver_plot, ave_wind_speed_profile_and_velocity

@@ -1,29 +1,31 @@
-import xarray as xr
-import numpy as np
-import matplotlib.pyplot as plt
-# from lab4.lab4ex2 import generate_storm_dataset
-
-ds = xr.open_dataset('data/May2000-uvt.nc')
-
-# sds = generate_storm_dataset(ds)
+# import xarray as xr
+# import cartopy.crs as ccrs
+# import matplotlib.pyplot as plt
+# from lab4.lab4ex2 import generate_plot_layout as gpl
+# from lab4.lab4ex3 import wind_velocity_quiver_plot, ave_wind_speed_profile_and_velocity
 #
-# storm_counts = sds.groupby('time').count()
 #
-# storm_counts['u'].plot()
+# if __name__ == '__main__':
+#     ds = xr.open_dataset('data/May2000-uvt.nc')
+#     u = ds['u'].sel(level=1000, latitude=slice(15, -15))
+#     v = ds['v'].sel(level=1000, latitude=slice(15, -15))
+#     ds.close()
+#     correlation = xr.corr(u, v, dim='time')
 #
-# plt.ylabel('storm count')
-# plt.show()
-# plt.close()
-
-u = ds['u'].sel(level=1000)
-v = ds['v'].sel(level=1000)
-ws = np.sqrt(u ** 2 + v ** 2)
-storm_mask = ws > 20
-
-storm_count = storm_mask.sum(dim=['latitude', 'longitude'])
-print(storm_count)
-
-storm_count.plot()
-plt.ylabel('storm count')
-plt.show()
-plt.close()
+#     _, u_ave, v_ave = ave_wind_speed_profile_and_velocity(u, v)
+#
+#     _, ax = gpl()
+#
+#     im = correlation.plot(ax=ax, transform=ccrs.PlateCarree(),
+#                           cmap='RdBu_r', vmin=-1, vmax=1,
+#                           add_colorbar=False
+#                           )
+#     cbar = plt.colorbar(im, ax=ax, orientation='horizontal')
+#     cbar.set_label('Correlation Coefficient')
+#
+#     Q, qk = wind_velocity_quiver_plot(u_ave, v_ave, subset_step=5, axis=ax)
+#
+#     plt.title('Correlation between the surface zonal and meridional wind')
+#     plt.tight_layout()
+#     plt.show()
+#     plt.close()
