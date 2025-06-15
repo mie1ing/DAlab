@@ -115,6 +115,6 @@ if __name__ == '__main__':
     plt.xticks(rotation=45)
     plt.title(f'Apply fitting model on point at {another_lat}°N, {another_lon}°E, R² = {another_r2:.2f}, MSE = {MSE:.2f}')
     plt.grid()
-    plt.savefig('../overleaf/67fe68e723632af9fad1411b/figures/lab6_7ex4_3.png')
+    plt.savefig('../67fe68e723632af9fad1411b/figures/lab6_7ex4_3.png')
     plt.close()
 

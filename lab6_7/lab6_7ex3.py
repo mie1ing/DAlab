@@ -2,14 +2,10 @@ import xarray as xr
 import numpy as np
 import scipy.optimize as opt
 import matplotlib.pyplot as plt
+from sklearn.metrics import r2_score
 
 def sin_function(x, a, b, c, freq):
     return a + b * np.sin(freq * x + c)
-
-def calculate_r2(y_true, y_pred):
-    sse = np.sum((y_true - y_pred)**2)
-    sst = np.sum((y_true - np.mean(y_true))**2)
-    return 1 - sse/sst
 
 def curfit_sin_function(dataset, selected_longitude):
     u = dataset['u'].sel(level=200, longitude=selected_longitude, method='nearest')
@@ -19,7 +15,7 @@ def curfit_sin_function(dataset, selected_longitude):
     (a, b, c, frequency), _ = opt.curve_fit(sin_function, time, u_true, p0=[0, 1, 0, 1])
 
     u_fitted = sin_function(time, a, b, c, frequency)
-    r_squre = calculate_r2(u_true, u_fitted)
+    r_squre = r2_score(u_true, u_fitted)
 
     return time, frequency, u_true, u_fitted, r_squre
 
@@ -34,7 +30,7 @@ def curfit_with_fixed_frequency(dataset, selected_longitude, fixed_frequency):
     (a, b, c), _ = opt.curve_fit(fix_function, time, u_true, p0=[0, 1, 0])
 
     u_fitted = sin_function(time, a, b, c, fixed_frequency)
-    r_squre = calculate_r2(u_true, u_fitted)
+    r_squre = r2_score(u_true, u_fitted)
 
     return time, u_true, u_fitted, r_squre
 
@@ -45,7 +41,7 @@ def plot_fitting_result(time, y_true, y_pred, r_squre, selected_longitude):
     plt.title(f'sin fit of tropical u (R² = {r_squre:.2f})')
     plt.xlabel('time')
     plt.ylabel('u')
-    plt.savefig(f'../overleaf/67fe68e723632af9fad1411b/figures/lab6_7ex3_{selected_longitude}.png')
+    plt.savefig(f'../67fe68e723632af9fad1411b/figures/lab6_7ex3_{selected_longitude}.png')
     plt.close()
 
 if __name__ == '__main__':

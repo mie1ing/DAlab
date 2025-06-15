@@ -16,4 +16,4 @@ if __name__ == '__main__':
         else:
             label.set_visible(False)
     plt.title('Boxplot of u at level 500')
-    plt.savefig('../overleaf/67fe68e723632af9fad1411b/figures/lab6_7ex1.png')
+    plt.savefig('../67fe68e723632af9fad1411b/figures/lab6_7ex1.png')

@@ -26,4 +26,4 @@ if __name__ == '__main__':
 
     plt.title('Correlation between the surface zonal and meridional wind')
     plt.tight_layout()
-    plt.savefig('../overleaf/67fe68e723632af9fad1411b/figures/lab6_7ex2.png')
+    plt.savefig('../67fe68e723632af9fad1411b/figures/lab6_7ex2.png')
