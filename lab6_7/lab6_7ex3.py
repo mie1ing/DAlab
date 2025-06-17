@@ -12,7 +12,7 @@ def curfit_sin_function(dataset, selected_longitude):
 
     u_true = u.sel(latitude=slice(15, -15)).mean(dim='latitude').values
     time = np.arange(len(u_true))
-    (a, b, c, frequency), _ = opt.curve_fit(sin_function, time, u_true, p0=[0, 1, 0, 1])
+    (a, b, c, frequency), _ = opt.curve_fit(sin_function, time, u_true, p0=[0, 0.001, 0, 0.001])
 
     u_fitted = sin_function(time, a, b, c, frequency)
     r_squre = r2_score(u_true, u_fitted)
@@ -27,7 +27,7 @@ def curfit_with_fixed_frequency(dataset, selected_longitude, fixed_frequency):
     def fix_function(x, a1, b1, c1):
         return a1 + b1 * np.sin(fixed_frequency * x + c1)
 
-    (a, b, c), _ = opt.curve_fit(fix_function, time, u_true, p0=[0, 1, 0])
+    (a, b, c), _ = opt.curve_fit(fix_function, time, u_true, p0=[0, 0.001, 0])
 
     u_fitted = sin_function(time, a, b, c, fixed_frequency)
     r_squre = r2_score(u_true, u_fitted)

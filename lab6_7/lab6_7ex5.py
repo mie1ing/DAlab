@@ -32,6 +32,6 @@ if __name__ == '__main__':
     u = ds['u'].sel(level=500)
     target_lat = 30
 
-    hist_plot(u, target_lat)
-    hist_plot(u, target_lat, north=False)
+    # hist_plot(u, target_lat)
+    # hist_plot(u, target_lat, north=False)
     student_t_test(u, target_lat)
